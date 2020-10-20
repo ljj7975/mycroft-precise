@@ -193,7 +193,7 @@ class TrainData:
         output_parts = []
 
         vectorizer = vectorizer or (vectorize_delta if pr.use_delta else vectorize)
-        cache = Pyache('.cache', lambda x: vectorizer(load_audio(x)), pr.vectorization_md5_hash())
+        # cache = Pyache('.cache', lambda x: vectorizer(load_audio(x)), pr.vectorization_md5_hash())
 
         def add(filenames, output):
             def on_loop():
@@ -202,7 +202,8 @@ class TrainData:
 
             on_loop.i = 0
 
-            new_inputs = cache.load(filenames, on_loop=on_loop)
+            # new_inputs = cache.load(filenames, on_loop=on_loop)
+            new_inputs = np.array([vectorizer(load_audio(file)) for file in filenames])
             new_outputs = np.array([[output] for _ in range(len(new_inputs))])
             if new_inputs.size == 0:
                 new_inputs = np.empty((0, pr.n_features, pr.feature_size))
